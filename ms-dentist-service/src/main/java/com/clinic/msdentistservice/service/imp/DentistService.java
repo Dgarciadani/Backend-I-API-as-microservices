@@ -42,7 +42,7 @@ public class DentistService implements IDentistService {
             logger.info("dentist with id: " + id + " was found");
             return mapper.map(dentistRepository.findById(id).get(), DentistSendDto.class);
         } else {
-            throw new ResourceNotFoundException("Dentist with id: " + id);
+            throw new ResourceNotFoundException("dentist with id: " + id + " not found");
         }
     }
 

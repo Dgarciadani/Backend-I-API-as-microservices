@@ -16,7 +16,6 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/dentist")
 public class DentistController {
 
 
