@@ -1,0 +1,12 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: file:///Users/grego/Documents/proyectosDesarollo/MicroservicesJava/git-localconfig-repo
+
