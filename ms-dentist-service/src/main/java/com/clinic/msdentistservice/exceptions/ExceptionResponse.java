@@ -1,11 +1,11 @@
-package com.grego.userservice.exceptions;
+package com.clinic.msdentistservice.exceptions;
 
 
 public class ExceptionResponse {
 
     private String message;
 
-    public ExceptionResponse( String message) {
+    public ExceptionResponse(String message) {
         super();
         this.message = message;
     }

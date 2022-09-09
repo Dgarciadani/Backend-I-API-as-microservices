@@ -1,16 +1,16 @@
-package com.grego.userservice.exceptions;
+package com.clinic.msdentistservice.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.CONFLICT)
-public class EmailAlreadyRegisteredException extends RuntimeException {
+public class RegisterAlreadyRegisteredException extends RuntimeException {
 
-    public EmailAlreadyRegisteredException(String message) {
+    public RegisterAlreadyRegisteredException(String message) {
         super(message);
     }
 
-    public EmailAlreadyRegisteredException(String message, Throwable cause) {
+    public RegisterAlreadyRegisteredException(String message, Throwable cause) {
         super(message, cause);
     }
 
