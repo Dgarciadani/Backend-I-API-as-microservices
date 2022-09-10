@@ -11,7 +11,7 @@ public interface IAddressService {
 
     AddressDto findById(Long id) ;
 
-    AddressDto save(Address entity);
+    AddressDto save(Long patientId,Address entity);
 
     void deleteByPatientId(Long id) ;
 

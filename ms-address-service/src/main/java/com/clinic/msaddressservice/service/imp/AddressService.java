@@ -34,7 +34,8 @@ public class AddressService implements IAddressService {
     }
 
     @Override
-    public AddressDto save(Address entity) {
+    public AddressDto save(Long patientId,Address entity) {
+        entity.setPatientId(patientId);
         return modelMapper.map(addressRepository.save(entity), AddressDto.class);
     }
 

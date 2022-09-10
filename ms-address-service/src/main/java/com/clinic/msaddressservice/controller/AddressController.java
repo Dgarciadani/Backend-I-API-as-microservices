@@ -30,9 +30,9 @@ public class AddressController {
         return new ResponseEntity<AddressDto>(addressService.findByPatientId(id), HttpStatus.OK);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<AddressDto> register(@RequestBody @Valid Address address) {
-        return new ResponseEntity<AddressDto>(addressService.save(address), HttpStatus.CREATED);
+    @PostMapping("/register/patientId={patientId}")
+    public ResponseEntity<AddressDto> register(@PathVariable Long patientId,@RequestBody @Valid Address address) {
+        return new ResponseEntity<AddressDto>(addressService.save(patientId,address), HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
