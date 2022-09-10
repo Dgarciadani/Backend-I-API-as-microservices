@@ -1,0 +1,29 @@
+server:
+  port: 8100
+  servlet:
+    context-path: /patient
+
+spring:
+  application:
+    name: patient-service
+  config:
+    import: optional:configserver:http://localhost:8888
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:patient-service;DB_CLOSE_DELAY=-1
+    username: sa
+  h2:
+    console:
+      enabled: true
+  #sql:
+  #  init:
+  #    data-locations: classpath:init.sql
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create-drop
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
