@@ -23,6 +23,11 @@ public class AddressService implements IAddressService {
 
 
     @Override
+    public boolean existsByIdPatientId(Long id) {
+        return addressRepository.existsByPatientId(id);
+    }
+
+    @Override
     public AddressDto findByPatientId(Long id) {
 
         return modelMapper.map(addressRepository.findByPatientId(id), AddressDto.class);
@@ -34,20 +39,25 @@ public class AddressService implements IAddressService {
     }
 
     @Override
-    public AddressDto save(Long patientId,Address entity) {
+    public AddressDto save(Long patientId, Address entity) {
         entity.setPatientId(patientId);
         return modelMapper.map(addressRepository.save(entity), AddressDto.class);
     }
 
     @Override
-    public void deleteByPatientId(Long id) {
-        addressRepository.deleteByPatientId(id);
-
+    public void deleteByPatientId(Long patientId) {
+        addressRepository.deleteByPatientId(patientId);
     }
 
     @Override
-    public AddressDto updateByPatientId(Long id, Address entity) {
-        return modelMapper.map(addressRepository.updateByPatientId(id, entity), AddressDto.class);
+    public AddressDto updateByPatientId(Long patientId, Address entity) {
+        if (this.existsByIdPatientId(patientId)) {
+            entity.setPatientId(patientId);
+            addressRepository.updateByPatientId(patientId,entity.getStreet(),entity.getDoor(),entity.getCity(),entity.getState());
+            return modelMapper.map(addressRepository.findByPatientId(patientId), AddressDto.class);
+        } else {
+            throw new RuntimeException("Address with patient id: " + patientId + " not found");
+        }
     }
 
 }

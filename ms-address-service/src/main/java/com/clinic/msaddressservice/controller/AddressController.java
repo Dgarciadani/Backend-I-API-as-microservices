@@ -35,16 +35,14 @@ public class AddressController {
         return new ResponseEntity<AddressDto>(addressService.save(patientId,address), HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<AddressDto> updateByPatientId(Long id, Address address) {
-        return new ResponseEntity<AddressDto>(addressService.updateByPatientId(id, address), HttpStatus.OK);
+    @PutMapping("/update/patientId={patientId}")
+    public ResponseEntity<AddressDto> updateByPatientId(@PathVariable Long patientId, @RequestBody  Address address) {
+        return new ResponseEntity<AddressDto>(addressService.updateByPatientId(patientId, address), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteByPatientId(Long id) {
-        addressService.deleteByPatientId(id);
+    @DeleteMapping("/delete/patientId={patientId}")
+    public ResponseEntity<Void> deleteByPatientId(@PathVariable Long patientId) {
+        addressService.deleteByPatientId(patientId);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
-
-
 }

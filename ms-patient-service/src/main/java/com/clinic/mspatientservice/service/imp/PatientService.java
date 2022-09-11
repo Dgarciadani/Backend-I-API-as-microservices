@@ -56,7 +56,7 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = RuntimeException.class)
     public PatientSendDto save(PatientReceivedDto entity) {
         if (this.existsByDni(entity.getDni())) {
             throw new DniAlreadyRegisteredException("Patient with dni: " + entity.getDni() + " already exists");
@@ -80,6 +80,8 @@ public class PatientService implements IPatientService {
     public void deleteById(Long id) {
         if (this.existsById(id)) {
             patientRepository.deleteById(id);
+            addressService.deleteAddressByPatientId(id);
+            logger.info("patient with id: " + id + " was deleted");
         } else {
             throw new ResourceNotFoundException("Patient with id: " + id + " not found");
         }
@@ -87,12 +89,17 @@ public class PatientService implements IPatientService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public PatientSendDto update(Long id, PatientReceivedDto entity) {
         if (this.existsById(id)) {
             Patient patient = modelMapper.map(entity, Patient.class);
             patient.setId(id);
             logger.info("patient updated" + entity);
-            return modelMapper.map(patientRepository.save(patient), PatientSendDto.class);
+            addressService.updateAddressByPatientId(id, entity.getAddress());
+            Patient patientUpdated = patientRepository.save(patient);
+            PatientSendDto patientSendDto = modelMapper.map(patientUpdated, PatientSendDto.class);
+            patientSendDto.setAddress(addressService.getAddressById(id).getBody());
+            return patientSendDto;
         } else {
             throw new ResourceNotFoundException("Patient with id: " + id + " not found");
         }
@@ -100,8 +107,11 @@ public class PatientService implements IPatientService {
 
     @Override
     public List<PatientSendDto> findAll() {
-
         List<Patient> patients = patientRepository.findAll();
-        return patients.stream().map(patient -> modelMapper.map(patient, PatientSendDto.class)).toList();
+        return patients.stream().map(patient -> {
+            PatientSendDto patientSendDto = modelMapper.map(patient, PatientSendDto.class);
+            patientSendDto.setAddress(addressService.getAddressById(patient.getId()).getBody());
+            return patientSendDto;
+        }).toList();
     }
 }

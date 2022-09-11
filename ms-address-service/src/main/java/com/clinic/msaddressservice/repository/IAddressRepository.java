@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 public interface IAddressRepository extends JpaRepository<Address,Long> {
 
 
+    public boolean existsByPatientId(Long id);
     public Address findByPatientId(Long id);
 
     @Modifying
@@ -21,5 +22,5 @@ public interface IAddressRepository extends JpaRepository<Address,Long> {
     @Modifying
     @Transactional
     @Query("UPDATE Address a SET a.street = ?2, a.door = ?3, a.city = ?4, a.state = ?5 WHERE a.patientId = ?1")
-    public Address updateByPatientId(Long id, Address entity);
+    public void updateByPatientId(Long patientId,String street,Integer door,String city,String state);
 }
