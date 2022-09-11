@@ -1,10 +1,10 @@
 package com.clinic.mspatientservice.domain;
 
+import com.clinic.mspatientservice.domain.model.Address;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -23,8 +23,6 @@ public class Patient {
     private String lastName;
     private String dni;
     private String email;
-
     private LocalDate createdAt;
 
-   // private Address address;
 }

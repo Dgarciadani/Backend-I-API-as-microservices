@@ -1,5 +1,6 @@
 package com.clinic.mspatientservice.domain.dto;
 
+import com.clinic.mspatientservice.domain.model.Address;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -22,6 +23,8 @@ public class PatientSendDto {
     private String lastName;
     private String email;
     private String dni;
-   // private AddressDTO address;
+
+    private Address address;
+
     private LocalDate createdAt;
 }

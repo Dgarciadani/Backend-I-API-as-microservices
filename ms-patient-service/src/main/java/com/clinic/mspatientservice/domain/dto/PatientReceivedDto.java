@@ -1,5 +1,6 @@
 package com.clinic.mspatientservice.domain.dto;
 
+import com.clinic.mspatientservice.domain.model.Address;
 import lombok.*;
 
 import javax.validation.constraints.Email;
@@ -22,5 +23,6 @@ public class PatientReceivedDto {
     private String email;
     @NotNull(message = "dni is required")
     private String dni;
-    //private AddressDTO address;
+    @NotNull(message = "address is required")
+    private Address address;
 }
