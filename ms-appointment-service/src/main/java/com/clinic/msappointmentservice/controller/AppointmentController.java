@@ -31,4 +31,36 @@ public class AppointmentController {
         return ResponseEntity.ok().body(appointmentService.createAppointment(appointment));
     }
 
+    @DeleteMapping("/delete/id={id}")
+    public ResponseEntity<String> deleteAppointment(@PathVariable Long id) {
+        appointmentService.deleteAppointment(id);
+        return ResponseEntity.ok().body("Appointment deleted successfully");
+    }
+
+    @PutMapping("/update/id={id}")
+    public ResponseEntity<AppointmentToSendDto> updateAppointment(@PathVariable Long id, @RequestBody Appointment appointment) {
+        return ResponseEntity.ok().body(appointmentService.updateAppointment(id, appointment));
+    }
+
+    @GetMapping("/patient/id={id}")
+    public ResponseEntity<List<AppointmentToSendDto>> findByPatientId(@PathVariable Long id) {
+        List<AppointmentToSendDto> appointments = appointmentService.findByPatientId(id);
+        if (appointments.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok().body(appointments);
+        }
+
+    }
+
+    @GetMapping("/dentist/id={id}")
+    public ResponseEntity<List<AppointmentToSendDto>> findByDentistId(@PathVariable Long id) {
+        List<AppointmentToSendDto> appointments = appointmentService.findByDentistId(id);
+        if (appointments.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok().body(appointments);
+        }
+    }
+
 }

@@ -24,4 +24,7 @@ public interface IAppointmentService {
     List<AppointmentToSendDto> findByPatientId(Long patientId);
 
     List<AppointmentToSendDto> findByDentistId(Long dentistId);
+
+    public void deleteAppointment(Long id);
+
 }

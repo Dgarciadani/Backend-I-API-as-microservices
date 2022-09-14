@@ -46,7 +46,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
-    public AppointmentToSendDto createAppointment( Appointment appointment) {
+    public AppointmentToSendDto createAppointment(Appointment appointment) {
         logger.info("Creating appointment");
         try {
             if (!this.existsAppointmentAtDateD(appointment.getDentist_id(), appointment.getDate())) {
@@ -57,31 +57,41 @@ public class AppointmentService implements IAppointmentService {
                 logger.info("dentist and patient exists");
                 appointmentRepository.save(appointment);
                 logger.info("Appointment created");
-                AppointmentToSendDto appointmentToSendDto = modelMapper.map(appointment, AppointmentToSendDto.class);
-                appointmentToSendDto.setDentist(dentistClient.findById(appointment.getDentist_id()).getBody());
-                appointmentToSendDto.setPatient(patientClient.findById(appointment.getPatient_id()).getBody());
+                AppointmentToSendDto appointmentToSendDto = mapToAppointmentDto(appointment);
+                setPatientAndDentis(appointment.getPatient_id(), appointment.getDentist_id(), appointmentToSendDto);
                 return appointmentToSendDto;
             } else {
                 throw new RuntimeException("The dentist or patient does not exist");
             }
         } catch (Exception e) {
-            throw new ResourceNotFoundException("Error creating the appointment: "+ e.getMessage());
+            throw new ResourceNotFoundException("Error creating the appointment: " + e.getMessage());
         }
 
     }
 
     @Override
     public AppointmentToSendDto updateAppointment(Long id, Appointment appointment) {
-        return modelMapper.map(appointmentRepository.save(appointment), AppointmentToSendDto.class);
+        if (this.existsAppointmentById(id)) {
+            logger.info("Updating appointment");
+            appointment.setId(id);
+            appointmentRepository.save(appointment);
+            AppointmentToSendDto appointmentToSendDto = mapToAppointmentDto(appointment);
+            setPatientAndDentis(appointment.getPatient_id(), appointment.getDentist_id(), appointmentToSendDto);
+            logger.info("Appointment updated");
+            return appointmentToSendDto;
+
+        } else {
+            throw new ResourceNotFoundException("The appointment does not exist");
+        }
+
     }
 
     @Override
     public AppointmentToSendDto findById(Long id) {
         if (this.existsAppointmentById(id)) {
             Appointment appointment = appointmentRepository.findById(id).get();
-            AppointmentToSendDto appointmentToSendDto = modelMapper.map(appointment, AppointmentToSendDto.class);
-            appointmentToSendDto.setPatient(patientClient.findById(appointment.getPatient_id()).getBody());
-            appointmentToSendDto.setDentist(dentistClient.findById(appointment.getDentist_id()).getBody());
+            AppointmentToSendDto appointmentToSendDto = mapToAppointmentDto(appointment);
+            setPatientAndDentis(appointment.getPatient_id(), appointment.getDentist_id(), appointmentToSendDto);
             return appointmentToSendDto;
         } else {
             throw new ResourceNotFoundException("Appointment not found");
@@ -90,14 +100,13 @@ public class AppointmentService implements IAppointmentService {
 
     @Override
     public List<AppointmentToSendDto> findAll() {
-        if (appointmentRepository.findAll().isEmpty()) {
+        List<Appointment> appointments = appointmentRepository.findAll();
+        if (appointments.isEmpty()) {
             throw new ResourceNotFoundException("Appointment not found");
         } else {
-            List<Appointment> appointments = appointmentRepository.findAll();
-            List<AppointmentToSendDto> appointmentToSendDtos = modelMapper.map(appointments, List.class);
+            List<AppointmentToSendDto> appointmentToSendDtos = mapToAppointmentList(appointments);
             for (int i = 0; i < appointmentToSendDtos.size(); i++) {
-                appointmentToSendDtos.get(i).setPatient(patientClient.findById(appointments.get(i).getPatient_id()).getBody());
-                appointmentToSendDtos.get(i).setDentist(dentistClient.findById(appointments.get(i).getDentist_id()).getBody());
+                setPatientAndDentis(appointments.get(i).getPatient_id(), appointments.get(i).getDentist_id(), appointmentToSendDtos.get(i));
             }
             return appointmentToSendDtos;
         }
@@ -105,33 +114,53 @@ public class AppointmentService implements IAppointmentService {
 
     @Override
     public List<AppointmentToSendDto> findByPatientId(Long patientId) {
-        if (appointmentRepository.findAppointmentsByPatient_id(patientId).isEmpty()) {
-            throw new ResourceNotFoundException("Appointments not found");
-        } else {
-            List<Appointment> appointments = appointmentRepository.findAppointmentsByPatient_id(patientId);
-            List<AppointmentToSendDto> appointmentToSendDtos = modelMapper.map(appointments, List.class);
-            for (int i = 0; i < appointmentToSendDtos.size(); i++) {
-                appointmentToSendDtos.get(i).setPatient(patientClient.findById(appointments.get(i).getPatient_id()).getBody());
-                appointmentToSendDtos.get(i).setDentist(dentistClient.findById(appointments.get(i).getDentist_id()).getBody());
-            }
-            return appointmentToSendDtos;
+        List<Appointment> appointments = appointmentRepository.findAppointmentsByPatient_id(patientId);
+        List<AppointmentToSendDto> appointmentToSendDtos = mapToAppointmentList(appointments);
+        for (int i = 0; i < appointmentToSendDtos.size(); i++) {
+            setPatientAndDentis(appointments.get(i).getPatient_id(), appointments.get(i).getDentist_id(), appointmentToSendDtos.get(i));
         }
+        return appointmentToSendDtos;
     }
 
     @Override
     public List<AppointmentToSendDto> findByDentistId(Long dentistId) {
-        if (appointmentRepository.findAppointmentsByDentist_id(dentistId).isEmpty()) {
-            throw new ResourceNotFoundException("Appointments not found");
+        List<Appointment> appointments = appointmentRepository.findAppointmentsByDentist_id(dentistId);
+        List<AppointmentToSendDto> appointmentToSendDtos = mapToAppointmentList(appointments);
+        for (int i = 0; i < appointmentToSendDtos.size(); i++) {
+            setPatientAndDentis(appointments.get(i).getPatient_id(), appointments.get(i).getDentist_id(), appointmentToSendDtos.get(i));
+        }
+        return appointmentToSendDtos;
+    }
+
+    @Override
+    public void deleteAppointment(Long id) {
+        if (this.existsAppointmentById(id)) {
+            appointmentRepository.deleteById(id);
         } else {
-            List<Appointment> appointments = appointmentRepository.findAppointmentsByDentist_id(dentistId);
-            List<AppointmentToSendDto> appointmentToSendDtos = modelMapper.map(appointments, List.class);
-            for (int i = 0; i < appointmentToSendDtos.size(); i++) {
-                appointmentToSendDtos.get(i).setPatient(patientClient.findById(appointments.get(i).getPatient_id()).getBody());
-                appointmentToSendDtos.get(i).setDentist(dentistClient.findById(appointments.get(i).getDentist_id()).getBody());
-            }
-            return appointmentToSendDtos;
+            throw new ResourceNotFoundException("Appointment not found");
         }
     }
 
+
+    //mappers
+
+    private Appointment mapToAppointment(AppointmentToSendDto appointmentDto) {
+        return modelMapper.map(appointmentDto, Appointment.class);
+    }
+
+    private AppointmentToSendDto mapToAppointmentDto(Appointment appointment) {
+        return modelMapper.map(appointment, AppointmentToSendDto.class);
+    }
+
+    private List<AppointmentToSendDto> mapToAppointmentList(List<Appointment> appointments) {
+        return appointments.stream().map(this::mapToAppointmentDto).toList();
+    }
+
+    //setters
+    private AppointmentToSendDto setPatientAndDentis(Long patientId, Long dentistId, AppointmentToSendDto appointment) {
+        appointment.setPatient(patientClient.findById(patientId).getBody());
+        appointment.setDentist(dentistClient.findById(dentistId).getBody());
+        return appointment;
+    }
 
 }
