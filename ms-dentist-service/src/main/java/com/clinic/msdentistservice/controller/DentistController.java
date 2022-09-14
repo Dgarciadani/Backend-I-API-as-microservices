@@ -26,6 +26,10 @@ public class DentistController {
     public ResponseEntity<DentistSendDto> findById(@PathVariable Long id) {
         return new ResponseEntity<DentistSendDto>(dentistService.findById(id), HttpStatus.OK);
     }
+    @GetMapping("exists/id={id}")
+    public ResponseEntity<Boolean> existsById(@PathVariable Long id) {
+        return new ResponseEntity<Boolean>(dentistService.existsById(id), HttpStatus.OK);
+    }
 
     @PostMapping("/register")
     public ResponseEntity<DentistSendDto> registerDentist(@RequestBody @Valid DentistReceivedDto dentistReceivedDto) {

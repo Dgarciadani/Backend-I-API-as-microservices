@@ -1,0 +1,1 @@
+INSERT into appointments values (default,'2020-01-01',1,1,1000.00);

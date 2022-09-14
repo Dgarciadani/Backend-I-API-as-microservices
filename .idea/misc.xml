@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/ms-user-service/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-config-server/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-eureka-server/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-gateway-server/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-address-service/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-dentist-service/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-patient-service/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-appointment-service/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK" />
+</project>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/Backen-I-to-microservices.iml" filepath="$PROJECT_DIR$/.idea/Backen-I-to-microservices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ms-address-service/ms-address-service.iml" filepath="$PROJECT_DIR$/ms-address-service/ms-address-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ms-appointment-service/ms-appointment-service.iml" filepath="$PROJECT_DIR$/ms-appointment-service/ms-appointment-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ms-config-server/ms-config-server.iml" filepath="$PROJECT_DIR$/ms-config-server/ms-config-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ms-dentist-service/ms-dentist-service.iml" filepath="$PROJECT_DIR$/ms-dentist-service/ms-dentist-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ms-eureka-server/ms-eureka-server.iml" filepath="$PROJECT_DIR$/ms-eureka-server/ms-eureka-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ms-gateway-server/ms-gateway-server.iml" filepath="$PROJECT_DIR$/ms-gateway-server/ms-gateway-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ms-patient-service/ms-patient-service.iml" filepath="$PROJECT_DIR$/ms-patient-service/ms-patient-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ms-user-service/ms-user-service.iml" filepath="$PROJECT_DIR$/ms-user-service/ms-user-service.iml" />
+    </modules>
+  </component>
+</project>

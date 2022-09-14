@@ -26,6 +26,10 @@ public class PatientController {
     public ResponseEntity<PatientSendDto> getPatientById(@PathVariable Long id) {
         return new ResponseEntity<PatientSendDto>(patientService.findById(id), org.springframework.http.HttpStatus.OK);
     }
+    @GetMapping("exists/id={id}")
+    public ResponseEntity<Boolean> existsById(@PathVariable Long id) {
+        return new ResponseEntity<Boolean>(patientService.existsById(id), org.springframework.http.HttpStatus.OK);
+    }
 
     @PostMapping("/register")
     public ResponseEntity<PatientSendDto> registerPatient(@RequestBody @Valid PatientReceivedDto patientReceivedDto) {
