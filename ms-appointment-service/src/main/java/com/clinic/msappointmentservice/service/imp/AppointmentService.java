@@ -47,12 +47,14 @@ public class AppointmentService implements IAppointmentService {
 
     @Override
     public AppointmentToSendDto createAppointment( Appointment appointment) {
+        logger.info("Creating appointment");
         try {
-            if (appointmentRepository.existsAppointmentAtDateD(appointment.getDentist_id(), appointment.getDate())) {
+            if (!this.existsAppointmentAtDateD(appointment.getDentist_id(), appointment.getDate())) {
                 throw new DateNotAvailableException("The date is not available for the dentist");
-            } else if (appointmentRepository.existsAppointmentAtDateP(appointment.getPatient_id(), appointment.getDate())) {
+            } else if (!this.existsAppointmentAtDateP(appointment.getPatient_id(), appointment.getDate())) {
                 throw new DateNotAvailableException("The date is not available for the patient");
             } else if (Boolean.TRUE.equals(dentistClient.existsById(appointment.getDentist_id()).getBody()) && Boolean.TRUE.equals(patientClient.existsById(appointment.getPatient_id()).getBody())) {
+                logger.info("dentist and patient exists");
                 appointmentRepository.save(appointment);
                 logger.info("Appointment created");
                 AppointmentToSendDto appointmentToSendDto = modelMapper.map(appointment, AppointmentToSendDto.class);
