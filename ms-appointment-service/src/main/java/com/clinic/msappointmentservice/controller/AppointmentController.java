@@ -63,4 +63,25 @@ public class AppointmentController {
         }
     }
 
+    @GetMapping("/patient/hassappointments/id={id}")
+    public ResponseEntity<Boolean> patientHasAppointments(@PathVariable Long id) {
+        boolean hasAppointments = appointmentService.patientHasAppointments(id);
+        if (hasAppointments) {
+            return ResponseEntity.ok().body(true);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+    @GetMapping("/dentist/hassappointments/id={id}")
+    public ResponseEntity<Boolean> dentistHasAppointments(@PathVariable Long id) {
+        boolean hasAppointments = appointmentService.dentistHasAppointments(id);
+        if (hasAppointments) {
+            return ResponseEntity.ok().body(true);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+
 }

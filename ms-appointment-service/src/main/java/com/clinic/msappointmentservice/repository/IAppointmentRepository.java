@@ -24,4 +24,10 @@ public interface IAppointmentRepository extends JpaRepository<Appointment,Long> 
 
     @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM Appointment a WHERE a.patient_id = ?1 AND a.date = ?2")
     boolean existsAppointmentAtDateP(Long patient_id,LocalDateTime date);
+
+    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM Appointment a WHERE a.patient_id = ?1")
+    boolean patientHasAppointments(Long patientId);
+
+    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM Appointment a WHERE a.dentist_id = ?1")
+    boolean dentistHasAppointments(Long dentistId);
 }

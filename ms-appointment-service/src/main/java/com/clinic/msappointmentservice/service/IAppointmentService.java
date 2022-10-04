@@ -27,4 +27,8 @@ public interface IAppointmentService {
 
     public void deleteAppointment(Long id);
 
+    boolean patientHasAppointments(Long patientId);
+
+    boolean dentistHasAppointments(Long dentistId);
+
 }

@@ -1,14 +1,15 @@
 package com.clinic.msdentistservice.service.imp;
 
+import com.clinic.msdentistservice.client.IAppointmentClient;
 import com.clinic.msdentistservice.domain.Dentist;
 import com.clinic.msdentistservice.domain.dto.DentistReceivedDto;
 import com.clinic.msdentistservice.domain.dto.DentistSendDto;
 import com.clinic.msdentistservice.exceptions.RegisterAlreadyRegisteredException;
+import com.clinic.msdentistservice.exceptions.ResourceHasAppointments;
 import com.clinic.msdentistservice.exceptions.ResourceNotFoundException;
 import com.clinic.msdentistservice.repository.IDentistRepository;
 import com.clinic.msdentistservice.service.IDentistService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ public class DentistService implements IDentistService {
     private final static Logger logger = org.slf4j.LoggerFactory.getLogger(DentistService.class);
 
     private final IDentistRepository dentistRepository;
+
+    private final IAppointmentClient appointmentClient;
 
     private ModelMapper mapper;
 
@@ -61,7 +64,11 @@ public class DentistService implements IDentistService {
     @Override
     public void deleteById(Long id) {
         if (dentistRepository.existsById(id)) {
-            dentistRepository.deleteById(id);
+            if (Boolean.TRUE.equals(appointmentClient.existsAppointmentByDentistId(id).getBody())) {
+                throw new ResourceHasAppointments("Dentist with id: " + id + " has appointments, can't be deleted");
+            } else {
+                dentistRepository.deleteById(id);
+            }
         } else {
             throw new ResourceNotFoundException("Dentist with id: " + id);
         }

@@ -141,6 +141,16 @@ public class AppointmentService implements IAppointmentService {
         }
     }
 
+    @Override
+    public boolean patientHasAppointments(Long patientId) {
+        return appointmentRepository.patientHasAppointments(patientId);
+    }
+
+    @Override
+    public boolean dentistHasAppointments(Long dentistId) {
+        return appointmentRepository.dentistHasAppointments(dentistId);
+    }
+
 
     //mappers
 

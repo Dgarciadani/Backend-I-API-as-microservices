@@ -1,11 +1,13 @@
 package com.clinic.mspatientservice.service.imp;
 
 import com.clinic.mspatientservice.client.IAddressClient;
+import com.clinic.mspatientservice.client.IAppointmentClient;
 import com.clinic.mspatientservice.domain.Patient;
 import com.clinic.mspatientservice.domain.dto.PatientReceivedDto;
 import com.clinic.mspatientservice.domain.dto.PatientSendDto;
 import com.clinic.mspatientservice.domain.model.Address;
 import com.clinic.mspatientservice.exceptions.DniAlreadyRegisteredException;
+import com.clinic.mspatientservice.exceptions.ResourceHasAppointments;
 import com.clinic.mspatientservice.exceptions.ResourceNotFoundException;
 import com.clinic.mspatientservice.repository.IPatientRepository;
 import com.clinic.mspatientservice.service.IPatientService;
@@ -30,6 +32,7 @@ public class PatientService implements IPatientService {
 
 
     private final IAddressClient addressService;
+    private final IAppointmentClient appointmentClient;
 
 
     @Override
@@ -79,9 +82,13 @@ public class PatientService implements IPatientService {
     @Override
     public void deleteById(Long id) {
         if (this.existsById(id)) {
-            patientRepository.deleteById(id);
-            addressService.deleteAddressByPatientId(id);
-            logger.info("patient with id: " + id + " was deleted");
+            if (Boolean.TRUE.equals(appointmentClient.existsAppointmentByPatientId(id).getBody())) {
+                throw new ResourceHasAppointments("Patient with id: " + id + " has appointments, can't be deleted");
+            } else {
+                patientRepository.deleteById(id);
+                addressService.deleteAddressByPatientId(id);
+                logger.info("patient with id: " + id + " was deleted");
+            }
         } else {
             throw new ResourceNotFoundException("Patient with id: " + id + " not found");
         }
